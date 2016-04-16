@@ -23,22 +23,18 @@ public class InformationParser {
 		staticScanner.useLocale(Locale.US);
 
 		int particlesAmount = staticScanner.nextInt();
-		int spaceDimension = staticScanner.nextInt();
-		double noiceAmplitude = staticScanner.nextDouble();
-		double interactionRadius = staticScanner.nextDouble();
-		double particleVelocity = staticScanner.nextDouble();
-
+		double spaceDimension = staticScanner.nextDouble();
 		builder = builder.withParticlesAmount(particlesAmount)
-						 .withSpaceDimension(spaceDimension)
-						 .withNoiceAmplitude(noiceAmplitude)
-						 .withInteractionRadius(interactionRadius);
+						 .withSpaceDimension(spaceDimension);
 
 		for (int i = 1; i <= particlesAmount; i++) {
 			double radius = staticScanner.nextDouble();
+			double mass = staticScanner.nextDouble();
 			double x = dynamicScanner.nextDouble();
 			double y = dynamicScanner.nextDouble();
 			double angle = dynamicScanner.nextDouble();
-			Particle particle = new Particle(i, x, y, radius, particleVelocity, angle);
+			double velocity = dynamicScanner.nextDouble();
+			Particle particle = new Particle(i, x, y, radius, velocity, angle, mass);
 			builder = builder.withParticle(particle);
 		}
 		

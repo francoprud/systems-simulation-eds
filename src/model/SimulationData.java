@@ -6,7 +6,7 @@ import java.util.List;
 
 public class SimulationData {
 	private Double interactionRadius;
-	private Integer spaceDimension; // All particle's coordinates are contained
+	private double spaceDimension; 	// All particle's coordinates are contained
 									// inside spaceDimension x spaceDimension
 	private Integer particlesAmount;
 	private Double noiceAmplitude;
@@ -26,7 +26,7 @@ public class SimulationData {
 		return interactionRadius;
 	}
 
-	public Integer getSpaceDimension() {
+	public double getSpaceDimension() {
 		return spaceDimension;
 	}
 
@@ -77,7 +77,7 @@ public class SimulationData {
 			return this;
 		}
 
-		public Builder withSpaceDimension(int spaceDimension) {
+		public Builder withSpaceDimension(double spaceDimension) {
 			this.cellIndexObject.spaceDimension = spaceDimension;
 			return this;
 		}
