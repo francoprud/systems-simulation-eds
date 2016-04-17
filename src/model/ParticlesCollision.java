@@ -38,14 +38,20 @@ public class ParticlesCollision implements Collision {
 				/ (sigma * (firstParticle.getMass() + secondParticle.getMass()));
 		double jx = (j * dx) / sigma;
 		double jy = (j * dy) / sigma;
-		
-		double firstParticleXVelocity = firstParticle.getXVelocity() + (jx /firstParticle.getMass());
-		double firstParticleYVelocity = firstParticle.getYVelocity() + (jy /firstParticle.getMass());
-		
-		double secondParticleXVelocity = secondParticle.getXVelocity() + (jx /secondParticle.getMass());
-		double secondParticleYVelocity = secondParticle.getYVelocity() + (jy /secondParticle.getMass());
-		
-		firstParticle.setAngleAndCalculateVelocity(firstParticleXVelocity, firstParticleYVelocity);
-		secondParticle.setAngleAndCalculateVelocity(secondParticleXVelocity, secondParticleYVelocity);
+
+		double firstParticleXVelocity = firstParticle.getXVelocity()
+				- (jx / firstParticle.getMass());
+		double firstParticleYVelocity = firstParticle.getYVelocity()
+				- (jy / firstParticle.getMass());
+
+		double secondParticleXVelocity = secondParticle.getXVelocity()
+				+ (jx / secondParticle.getMass());
+		double secondParticleYVelocity = secondParticle.getYVelocity()
+				+ (jy / secondParticle.getMass());
+
+		firstParticle.setAngleAndCalculateVelocity(firstParticleXVelocity,
+				firstParticleYVelocity);
+		secondParticle.setAngleAndCalculateVelocity(secondParticleXVelocity,
+				secondParticleYVelocity);
 	}
 }

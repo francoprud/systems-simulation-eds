@@ -53,7 +53,7 @@ public class OvitoFileInputGenerator {
 
 	private void printHeaders(int particlesAmount) {
 		writer.println(particlesAmount + 4);
-		writer.println("ID X Y dx dy pR pG pB r m vR vG vB");
+		writer.println("ID X Y dx dy pR pG pB r vR vG vB");
 	}
 
 	private String generateLine(Particle particle) {
@@ -66,7 +66,6 @@ public class OvitoFileInputGenerator {
 				.append(particle.getYVelocity())
 				.append(" ").append(particleColor)
 				.append(" ").append(particle.getRadius()).append(" ")
-				.append(particle.getMass()).append(" ")
 				.append(particleColor);
 		return line.toString();
 	}

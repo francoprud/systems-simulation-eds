@@ -35,7 +35,7 @@ public class InformationParser {
 			double angle = dynamicScanner.nextDouble();
 			double velocity = dynamicScanner.nextDouble();
 			Particle particle = new Particle(i, x, y, radius, velocity, angle, mass);
-			builder = builder.withParticle(particle);
+			builder = builder.withParticle(particle).withParticlesAmount(particlesAmount);
 		}
 		
 		dynamicScanner.close();

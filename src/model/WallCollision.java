@@ -11,6 +11,7 @@ public class WallCollision implements Collision {
 	public WallCollision(double collisionTime, Particle particle, String wall) {
 		this.collisionTime = collisionTime;
 		this.particle = particle;
+		this.wall = wall;
 	}
 	
 	public Particle getParticle() {
@@ -25,10 +26,10 @@ public class WallCollision implements Collision {
 	public void collide() {
 		switch (wall) {
 		case HORIZONTAL:
-			particle.setAngle(2 * Math.PI - particle.getAngle());
+			particle.setAngle(1 * Math.PI - particle.getAngle());
 			break;
 		case VERTICAL:
-			particle.setAngle(Math.PI - particle.getAngle());
+			particle.setAngle(2 * Math.PI - particle.getAngle());
 			break;
 		}
 	}

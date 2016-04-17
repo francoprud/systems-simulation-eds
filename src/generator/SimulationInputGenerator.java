@@ -15,16 +15,18 @@ public class SimulationInputGenerator {
 	private static final double SMALL_MASS = 1;
 	private static final double BIG_MASS = 100;
 
-	public static void generateRandomInput(int N, MyPoint xVelocityInterval, MyPoint yVelocityInterval)
-			throws FileNotFoundException, UnsupportedEncodingException {
+	public static void generateRandomInput(int N, MyPoint xVelocityInterval,
+			MyPoint yVelocityInterval) throws FileNotFoundException,
+			UnsupportedEncodingException {
 
 		if (N >= 2400)
 			throw new IllegalArgumentException("no more than 2400 particles");
-		PrintWriter dynamicWriter = new PrintWriter("doc/examples/Dynamic" + N + ".txt", "UTF-8");
-		PrintWriter staticWriter = new PrintWriter("doc/examples/Static" + N + ".txt", "UTF-8");
-		//
-		// staticWriter.println(N);
-		// staticWriter.println(SPACE_DIMENSION);
+		PrintWriter dynamicWriter = new PrintWriter("doc/examples/Dynamic" + N
+				+ ".txt", "UTF-8");
+		PrintWriter staticWriter = new PrintWriter("doc/examples/Static" + N
+				+ ".txt", "UTF-8");
+		staticWriter.println(N);
+		staticWriter.println(SPACE_DIMENSION);
 
 		// la particula grande va a ocupar 10x10 celdas peque;as. la explicacion
 		// es la siguiente:
@@ -46,18 +48,23 @@ public class SimulationInputGenerator {
 		// si la particula grande la spawneamos a partir de una celda xy hacia
 		// arriba y a la derecha entonces
 		// estas posiciones xy tienen que ser menor o igual a 45.
-		double bigParticleXIndex = PointGenerator.randomBetween(0, (int) (50 - bigParticleCells));
-		double bigParticleYIndex = PointGenerator.randomBetween(0, (int) (50 - bigParticleCells));
+		double bigParticleXIndex = PointGenerator.randomBetween(0,
+				(int) (50 - bigParticleCells));
+		double bigParticleYIndex = PointGenerator.randomBetween(0,
+				(int) (50 - bigParticleCells));
 
 		System.out.println("big x: " + bigParticleXIndex);
 		System.out.println("big y: " + bigParticleYIndex);
 
-		printParticleLine(staticWriter, dynamicWriter,
-				new MyPoint(bigParticleXIndex * (2 * SMALL_RADIUS), bigParticleYIndex * (2 * SMALL_RADIUS)),
-				new MyPoint(0, 0), new MyPoint(0, 0), BIG_RADIUS, BIG_MASS);
+		printParticleLine(staticWriter, dynamicWriter, new MyPoint(
+				bigParticleXIndex * (2 * SMALL_RADIUS), bigParticleYIndex
+						* (2 * SMALL_RADIUS)), new MyPoint(0, 0), new MyPoint(
+				0, 0), BIG_RADIUS, BIG_MASS);
 
-		MyRectangle bigParticleRect = new MyRectangle(new MyPoint(bigParticleXIndex, bigParticleYIndex),
-				new MyPoint(bigParticleXIndex + bigParticleCells - 1, bigParticleYIndex + bigParticleCells - 1));
+		MyRectangle bigParticleRect = new MyRectangle(new MyPoint(
+				bigParticleXIndex, bigParticleYIndex), new MyPoint(
+				bigParticleXIndex + bigParticleCells - 1, bigParticleYIndex
+						+ bigParticleCells - 1));
 
 		System.out.println(bigParticleRect);
 
@@ -78,12 +85,14 @@ public class SimulationInputGenerator {
 			}
 		}
 
-		RandomPopper<MyPoint> pointRandomPopper = new RandomPopper<>(validPoints);
+		RandomPopper<MyPoint> pointRandomPopper = new RandomPopper<>(
+				validPoints);
 		System.out.println("valid points size: " + validPoints.size());
 
 		for (int i = 0; i < N; i++) {
 			MyPoint p = pointRandomPopper.randomPop();
-			printParticleLine(staticWriter, dynamicWriter, p, xVelocityInterval, yVelocityInterval, SMALL_RADIUS,
+			printParticleLine(staticWriter, dynamicWriter, p,
+					xVelocityInterval, yVelocityInterval, SMALL_RADIUS,
 					SMALL_MASS);
 		}
 		// for (MyPoint p: validPoints) {
@@ -94,21 +103,28 @@ public class SimulationInputGenerator {
 		dynamicWriter.close();
 	}
 
-	private static void printParticleLine(PrintWriter staticWriter, PrintWriter dynamicWriter, MyPoint position,
-			MyPoint xVelocityInterval, MyPoint yVelocityInterval, double radius, double mass) {
-		double xVelocity = PointGenerator.randomBetween(xVelocityInterval.x, xVelocityInterval.y);
-		double yVelocity = PointGenerator.randomBetween(yVelocityInterval.x, yVelocityInterval.y);
-		double velocity = Math.sqrt(xVelocity * xVelocity + yVelocity * yVelocity);
+	private static void printParticleLine(PrintWriter staticWriter,
+			PrintWriter dynamicWriter, MyPoint position,
+			MyPoint xVelocityInterval, MyPoint yVelocityInterval,
+			double radius, double mass) {
+		double xVelocity = PointGenerator.randomBetween(xVelocityInterval.x,
+				xVelocityInterval.y);
+		double yVelocity = PointGenerator.randomBetween(yVelocityInterval.x,
+				yVelocityInterval.y);
+		double velocity = Math.sqrt(xVelocity * xVelocity + yVelocity
+				* yVelocity);
 		double angle = Math.atan2(yVelocity, xVelocity);
 
 		StaticFileEntry staticEntry = new StaticFileEntry(radius, mass);
-		DynamicFileEntry dynamicEntry = new DynamicFileEntry(position.x, position.y, angle, velocity);
+		DynamicFileEntry dynamicEntry = new DynamicFileEntry(position.x,
+				position.y, angle, velocity);
 
 		dynamicWriter.println(dynamicEntry);
 		staticWriter.println(staticEntry);
 	}
 
-	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
+	public static void main(String[] args) throws FileNotFoundException,
+			UnsupportedEncodingException {
 		generateRandomInput(100, new MyPoint(-0.1, 0.1), new MyPoint(-0.1, 0.1));
 	}
 

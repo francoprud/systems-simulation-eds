@@ -23,6 +23,10 @@ public class EventDrivenSimulation implements Simulation {
 		return simulationCurrentTime;
 	}
 
+	public void setSimulationCurrentTime(double time) {
+		this.simulationCurrentTime = time;
+	}
+
 	private Collision calculateNextCollision() {
 		Collision closestCollision = null;
 
@@ -33,9 +37,8 @@ public class EventDrivenSimulation implements Simulation {
 			closestCollision = minimumCollision(closestCollision,
 					new WallCollision(getVerticalWallCollisionTime(particle),
 							particle, WallCollision.VERTICAL));
-
 			for (Particle p : simulationData.getParticles()) {
-				if (particle.equals(p))
+				if (particle.getId() == p.getId())
 					continue;
 				closestCollision = minimumCollision(
 						closestCollision,
@@ -52,25 +55,38 @@ public class EventDrivenSimulation implements Simulation {
 			return collision2;
 		if (collision2 == null)
 			return collision1;
+		// Ignores negatives collision times
+		// if (collision2.getCollisionTime() < 0) {
+		// return collision1;
+		// }
+		// if (collision1.getCollisionTime() < 0) {
+		// return collision2;
+		// }
 		return collision2.getCollisionTime() < collision1.getCollisionTime() ? collision2
 				: collision1;
 	}
 
 	private double getHorizontalWallCollisionTime(Particle particle) {
 		if (particle.getXVelocity() > 0) {
-			return -particle.getX() / particle.getXVelocity();
-		} else {
-			return (simulationData.getSpaceDimension() - particle.getX())
+			return (simulationData.getSpaceDimension() - particle.getRadius() - particle
+					.getX()) / particle.getXVelocity();
+		} else if (particle.getXVelocity() < 0) {
+			return (particle.getRadius() - particle.getX())
 					/ particle.getXVelocity();
+		} else {
+			return Double.MAX_VALUE;
 		}
 	}
 
 	private double getVerticalWallCollisionTime(Particle particle) {
 		if (particle.getYVelocity() > 0) {
-			return -particle.getY() / particle.getYVelocity();
-		} else {
-			return (simulationData.getSpaceDimension() - particle.getY())
+			return (simulationData.getSpaceDimension() - particle.getRadius() - particle
+					.getY()) / particle.getYVelocity();
+		} else if (particle.getYVelocity() < 0) {
+			return (particle.getRadius() - particle.getY())
 					/ particle.getYVelocity();
+		} else {
+			return Double.MAX_VALUE;
 		}
 	}
 
