@@ -108,6 +108,6 @@ public class SimulationInputGenerator {
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
-		generateRandomInput(20, new MyPoint(-0.1, 0.1), new MyPoint(-0.1, 0.1));
+		generateRandomInput(100, new MyPoint(-0.1, 0.1), new MyPoint(-0.1, 0.1));
 	}
 }

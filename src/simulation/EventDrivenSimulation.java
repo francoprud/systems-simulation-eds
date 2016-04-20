@@ -7,10 +7,11 @@ import model.Particle;
 import model.ParticlesCollision;
 import model.SimulationData;
 import model.WallCollision;
+import statistics.StatisticsGenerator;
 
 public class EventDrivenSimulation implements Simulation {
 	private static final double EPSILON = 1e-8;
-	
+
 	private SimulationData simulationData;
 	private long T;
 	private double framesEachTimeUnits;
@@ -18,6 +19,8 @@ public class EventDrivenSimulation implements Simulation {
 
 	private double simulationCurrentTime;
 	private Collision nextCollision;
+
+	private StatisticsGenerator statisticsGenerator;
 
 	public interface Listener {
 		public void onFrameAvailable(SimulationData frame);
@@ -33,9 +36,11 @@ public class EventDrivenSimulation implements Simulation {
 	public void simulate(SimulationData simulationData) {
 		this.simulationData = simulationData;
 		this.simulationCurrentTime = 0;
+		statisticsGenerator = new StatisticsGenerator(1 / framesEachTimeUnits);
 
 		listener.onFrameAvailable(simulationData);
-		
+		statisticsGenerator.onFrameReached();
+
 		for (int t = 0; t < T - 1; t++) {
 			System.out.println("instant t = " + t);
 			boolean frameReached = false;
@@ -45,20 +50,30 @@ public class EventDrivenSimulation implements Simulation {
 					moveSystemForward(timeUntilNextFrame());
 					simulationCurrentTime += timeUntilNextFrame();
 					listener.onFrameAvailable(simulationData);
+					statisticsGenerator.onFrameReached();
+					if (t >= (2.0 / 3.0) * T) {
+						statisticsGenerator.saveVelocities(simulationData);
+					}
 					frameReached = true;
 				} else {
 					moveSystemForward(nextCollision.getCollisionTime());
 					nextCollision.collide();
 					simulationCurrentTime += nextCollision.getCollisionTime();
+					statisticsGenerator.onCollision(simulationCurrentTime);
 				}
 			}
 		}
 	}
 
+	public StatisticsGenerator getStatistics() {
+		return statisticsGenerator;
+	}
+
 	public double timeUntilNextFrame() {
 		double time = framesEachTimeUnits * (Math.floor(simulationCurrentTime / framesEachTimeUnits) + 1)
 				- simulationCurrentTime;
-		if (time < EPSILON) return framesEachTimeUnits;
+		if (time < EPSILON)
+			return framesEachTimeUnits;
 		return time;
 	}
 

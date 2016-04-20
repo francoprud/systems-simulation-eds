@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 
 public class SimulationData {
+	private static final double BOLTZMANN = 1.38064852e-23;
+
 	private Double interactionRadius;
-	private double spaceDimension; 	// All particle's coordinates are contained
+	private double spaceDimension; // All particle's coordinates are contained
 									// inside spaceDimension x spaceDimension
 	private Integer particlesAmount;
 	private Double noiceAmplitude;
@@ -15,9 +17,9 @@ public class SimulationData {
 
 	private SimulationData() {
 	}
-	
+
 	public void clearMarks() {
-		for (Particle particle: particles) {
+		for (Particle particle : particles) {
 			particle.clearMark();
 		}
 	}
@@ -33,27 +35,35 @@ public class SimulationData {
 	public Integer getParticlesAmount() {
 		return particlesAmount;
 	}
-	
+
 	public List<Particle> getParticles() {
 		return particles;
 	}
-	
+
 	public Particle getParticleById(int id) {
 		return particlesMap.get(id);
 	}
-	
+
 	public Double getNoiceAmplitude() {
 		return noiceAmplitude;
 	}
-	
+
 	public void setNoiceAmplitude(double noiceAmplitude) {
 		this.noiceAmplitude = noiceAmplitude;
 	}
-	
+
 	public void setParticles(List<Particle> particles) {
 		this.particles = particles;
 	}
-	
+
+	public double calculateTemperature() {
+		double acum = 0;
+		for (Particle particle : getParticles()) {
+			acum += (particle.getMass() * particle.getVelocity() * particle.getVelocity()) / (2 * BOLTZMANN);
+		}
+		return acum / getParticlesAmount();
+	}
+
 	public static class Builder {
 		private SimulationData cellIndexObject;
 
@@ -87,7 +97,7 @@ public class SimulationData {
 			cellIndexObject.particlesMap.put(particle.getId(), particle);
 			return this;
 		}
-		
+
 		public Builder withNoiceAmplitude(double noiceAmplitude) {
 			cellIndexObject.noiceAmplitude = noiceAmplitude;
 			return this;
