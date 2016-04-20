@@ -3,34 +3,34 @@ package simulation;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 
+import model.Particle;
 import model.SimulationData;
 import parser.InformationParser;
 import parser.OvitoFileInputGenerator;
 
 public class Main {
-	private static final String DYNAMIC_FILE_PATH = "doc/examples/Dynamic100.txt";
-	private static final String STATIC_FILE_PATH = "doc/examples/Static100.txt";
-	private static final int T = 2000;
-	private static final double animationTime = 0.1;
-	
+	private static final String DYNAMIC_FILE_PATH = "doc/examples/Dynamic440.txt";
+	private static final String STATIC_FILE_PATH = "doc/examples/Static440.txt";
+	private static final long T = 100;
+	private static final double FPU = 25;
+
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 		SimulationData simulationData = parseSimulationData();
 		if (simulationData == null) {
 			return;
 		}
-		EventDrivenSimulation simulation = new EventDrivenSimulation();
-		OvitoFileInputGenerator ovito = new OvitoFileInputGenerator("doc/examples/result.txt");
+
+		final OvitoFileInputGenerator ovito = new OvitoFileInputGenerator("doc/examples/result.txt");
 		ovito.generateFile();
-		ovito.printSimulationInstance(simulationData);
-		
-		for (int i = 0; i < T; i++) {
-			simulation.simulate(simulationData);
-			if (animationTime < simulation.getSimulationCurrentTime()) {
-				ovito.printSimulationInstance(simulationData);
-				// TODO: Check this operation
-				simulation.setSimulationCurrentTime(simulation.getSimulationCurrentTime() - animationTime);
+		EventDrivenSimulation simulation = new EventDrivenSimulation(T, 1.0/FPU, new EventDrivenSimulation.Listener() {
+
+			@Override
+			public void onFrameAvailable(SimulationData frame) {
+				ovito.printSimulationInstance(frame);
 			}
-		}
+		});
+
+		simulation.simulate(simulationData);
 		ovito.endSimulation();
 	}
 
